@@ -9,5 +9,4 @@ model = init_segmentor(config_file, checkpoint_file).cuda()
 
 def apply_uniformer(img):
     result = inference_segmentor(model, img)
-    res_img = show_result_pyplot(model, img, result, get_palette('ade'), opacity=1)
-    return res_img
+    return show_result_pyplot(model, img, result, get_palette('ade'), opacity=1)

@@ -19,9 +19,7 @@ def get_node_name(name, parent_name):
     if len(name) <= len(parent_name):
         return False, ''
     p = name[:len(parent_name)]
-    if p != parent_name:
-        return False, ''
-    return True, name[len(parent_name):]
+    return (False, '') if p != parent_name else (True, name[len(parent_name):])
 
 
 model = create_model(config_path='./models/cldm_v15.yaml')
@@ -35,10 +33,7 @@ scratch_dict = model.state_dict()
 target_dict = {}
 for k in scratch_dict.keys():
     is_control, name = get_node_name(k, 'control_')
-    if is_control:
-        copy_k = 'model.diffusion_' + name
-    else:
-        copy_k = k
+    copy_k = f'model.diffusion_{name}' if is_control else k
     if copy_k in pretrained_weights:
         target_dict[k] = pretrained_weights[copy_k].clone()
     else:

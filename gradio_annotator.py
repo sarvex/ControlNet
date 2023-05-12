@@ -51,8 +51,7 @@ def midas(img, res, a):
     if model_midas is None:
         from annotator.midas import apply_midas
         model_midas = apply_midas
-    results = model_midas(img, a)
-    return results
+    return model_midas(img, a)
 
 
 model_openpose = None

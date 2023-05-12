@@ -9,8 +9,7 @@ class MyDataset(Dataset):
     def __init__(self):
         self.data = []
         with open('./training/fill50k/prompt.json', 'rt') as f:
-            for line in f:
-                self.data.append(json.loads(line))
+            self.data.extend(json.loads(line) for line in f)
 
     def __len__(self):
         return len(self.data)
@@ -22,8 +21,8 @@ class MyDataset(Dataset):
         target_filename = item['target']
         prompt = item['prompt']
 
-        source = cv2.imread('./training/fill50k/' + source_filename)
-        target = cv2.imread('./training/fill50k/' + target_filename)
+        source = cv2.imread(f'./training/fill50k/{source_filename}')
+        target = cv2.imread(f'./training/fill50k/{target_filename}')
 
         # Do not forget that OpenCV read images in BGR order.
         source = cv2.cvtColor(source, cv2.COLOR_BGR2RGB)

@@ -27,9 +27,7 @@ def get_node_name(name, parent_name):
     if len(name) <= len(parent_name):
         return False, ''
     p = name[:len(parent_name)]
-    if p != parent_name:
-        return False, ''
-    return True, name[len(parent_name):]
+    return (False, '') if p != parent_name else (True, name[len(parent_name):])
 
 
 keys = sd15_with_control_state_dict.keys()
@@ -43,10 +41,7 @@ for key in keys:
         continue
     p = sd15_with_control_state_dict[key]
     is_control, node_name = get_node_name(key, 'control_')
-    if is_control:
-        sd15_key_name = 'model.diffusion_' + node_name
-    else:
-        sd15_key_name = key
+    sd15_key_name = f'model.diffusion_{node_name}' if is_control else key
     if sd15_key_name in input_state_dict:
         p_new = p + input_state_dict[sd15_key_name] - sd15_state_dict[sd15_key_name]
         # print(f'Offset clone from [{sd15_key_name}] to [{key}]')
@@ -56,4 +51,4 @@ for key in keys:
     final_state_dict[key] = p_new
 
 torch.save(final_state_dict, path_output)
-print('Transferred model saved at ' + path_output)
+print(f'Transferred model saved at {path_output}')
